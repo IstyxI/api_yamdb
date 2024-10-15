@@ -6,7 +6,7 @@ User = get_user_model()
 
 class Genre(models.Model):
     name = models.CharField('Название группы', max_length=256, blank=False)
-    slug = models.SlugField('Слаг', unique=True, max_length=50, blank=False)
+    slug = models.SlugField('Слаг', unique=True)
 
     class Meta:
         verbose_name = 'Группа'
@@ -32,13 +32,10 @@ class Title(models.Model):
     name = models.TextField('Название', max_length=256, blank=False)
     year = models.IntegerField('Год выпуска', blank=False)
     description = models.TextField('Описание', blank=True)
-    genre = models.ForeignKey(
+    genre = models.ManyToManyField(
         Genre,
-        on_delete=models.SET_NULL,
         related_name='titles',
-        verbose_name='Жанр',
-        blank=False,
-        null=True
+        verbose_name='жанр'
     )
     category = models.ForeignKey(
         Category,
@@ -62,16 +59,19 @@ class Review(models.Model):
 
 
 class Comment(models.Model):
+    text = models.TextField('текст комментария', max_length=200)
     author = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='comments'
-    )
-    title = models.ForeignKey(
-        Title, on_delete=models.CASCADE, related_name='comments'
+        User,
+        on_delete=models.CASCADE,
+        related_name='comments',
+        verbose_name='автор'
     )
     review = models.ForeignKey(
-        Review, on_delete=models.CASCADE, related_name='comments'
+        Review,
+        on_delete=models.CASCADE,
+        related_name='comments',
+        verbose_name='отзыв'
     )
-    text = models.TextField()
     created = models.DateTimeField(
         'Дата добавления', auto_now_add=True, db_index=True
     )

@@ -5,15 +5,24 @@ from rest_framework.pagination import LimitOffsetPagination
 
 from reviews.models import Title, Category, Genre
 
-from .serializers import TitleSerializer, CategorySerializer, GenreSerializer
+from .serializers import (
+    TitleReadSerializer,
+    TitleWriteSerializer,
+    CategorySerializer,
+    GenreSerializer
+)
 
 
 class TitleViewSet(viewsets.ModelViewSet):
     pagination_class = LimitOffsetPagination
     queryset = Title.objects.all()
-    serializer_class = TitleSerializer
     filter_backends = (DjangoFilterBackend)
     filterset_fields = ('slug', 'genre', 'name', 'year')
+
+    def get_serializer_class(self):
+        if self.action in ('list', 'retrieve'):
+            return TitleReadSerializer
+        return TitleWriteSerializer
 
 
 class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
