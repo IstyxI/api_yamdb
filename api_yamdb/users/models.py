@@ -13,11 +13,16 @@ class User(AbstractUser):
         (MODERATOR, 'Moderator role')
     ]
 
-    email = models.EmailField(max_length=128, unique=True)
+    email = models.EmailField(
+        max_length=128,
+        unique=True,
+        verbose_name='email'
+    )
     role = models.CharField(
         max_length=16,
         choices=USER_ROLES,
-        default='user'
+        default='user',
+        verbose_name='Роль'
     )
     token = models.CharField(
         max_length=256,
@@ -26,7 +31,9 @@ class User(AbstractUser):
     )
 
     class Meta:
-        ordering = ('username')
+        ordering = ('username',)
+        verbose_name = 'user'
+        verbose_name_plural = 'Пользователи'
 
     def is_admin(self):
         return self.role == self.ADMIN or self.is_superuser
