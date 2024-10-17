@@ -29,6 +29,11 @@ class User(AbstractUser):
         blank=True,
         null=True
     )
+    bio = models.TextField(
+        max_length=256,
+        blank=True,
+        verbose_name='Биография'
+    )
 
     class Meta:
         ordering = ('username',)
