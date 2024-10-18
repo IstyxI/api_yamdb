@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404
-
+from django.db.models import Avg
 from django_filters.rest_framework import DjangoFilterBackend
 
 from rest_framework import viewsets, filters
@@ -21,13 +21,12 @@ from .serializers import (
 
 
 class TitleViewSet(viewsets.ModelViewSet):
-    # queryset = Title.objects.annotate(
-    #     rating=Avg('reviews__score')
-    # ).all()
+    queryset = Title.objects.annotate(
+        rating=Avg('reviews__score')
+    ).all()
     pagination_class = LimitOffsetPagination
-    queryset = Title.objects.all()
-    filter_backends = (DjangoFilterBackend)
-    filterset_fields = ('slug', 'genre', 'name', 'year')
+    filter_backends = (DjangoFilterBackend,)
+    filterset_fields = ('genre__slug', 'name', 'year', 'category')
 
     def get_serializer_class(self):
         if self.action in ('list', 'retrieve'):
@@ -41,7 +40,7 @@ class CategoryViewSet(
 ):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    filter_backends = (filters.SearchFilter)
+    filter_backends = (filters.SearchFilter,)
     search_fields = ('name',)
 
 
@@ -51,7 +50,7 @@ class GenreViewSet(
 ):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
-    filter_backends = (filters.SearchFilter)
+    filter_backends = (filters.SearchFilter,)
     search_fields = ('name',)
 
 
