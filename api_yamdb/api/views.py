@@ -11,6 +11,7 @@ from rest_framework.viewsets import GenericViewSet
 
 from reviews.models import Title, Category, Genre, Comment, Review
 
+from .filters import TitleFilter
 from .serializers import (
     TitleReadSerializer,
     TitleWriteSerializer,
@@ -26,7 +27,7 @@ class TitleViewSet(viewsets.ModelViewSet):
     ).all()
     pagination_class = LimitOffsetPagination
     filter_backends = (DjangoFilterBackend,)
-    filterset_fields = ('genre__slug', 'name', 'year', 'category')
+    filterset_class = TitleFilter
 
     def get_serializer_class(self):
         if self.action in ('list', 'retrieve'):
