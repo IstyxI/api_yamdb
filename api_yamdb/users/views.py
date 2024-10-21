@@ -1,3 +1,4 @@
+from django.db.utils import IntegrityError
 from django.contrib.auth.tokens import default_token_generator
 from django.shortcuts import get_object_or_404
 from rest_framework import filters, mixins, permissions, status, viewsets
@@ -31,7 +32,14 @@ class UserCreateViewSet(mixins.CreateModelMixin,
         отправляет на почту пользователя код подтверждения."""
         serializer = UserCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        user, _ = User.objects.get_or_create(**serializer.validated_data)
+        try:
+            user, _ = User.objects.get_or_create(**serializer.validated_data)
+        except IntegrityError:
+            return Response(
+                {"error": "Invalid request"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
         confirmation_code = default_token_generator.make_token(user)
         send_confirmation_code(
             email=user.email,
