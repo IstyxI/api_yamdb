@@ -1,7 +1,5 @@
 from django.contrib.auth.tokens import default_token_generator
-from django.db.models import Avg
 from django.shortcuts import get_object_or_404
-from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, mixins, permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -9,11 +7,7 @@ from rest_framework_simplejwt.tokens import AccessToken
 
 from users.models import User
 
-from users.permissions import (
-    AnonimReadOnly,
-    IsSuperUserIsAdminIsModeratorIsAuthor,
-    IsSuperUserOrIsAdminOnly
-)
+from users.permissions import IsSuperUserOrIsAdminOnly
 
 from users.serializers import (
     UserCreateSerializer,
@@ -22,6 +16,7 @@ from users.serializers import (
 )
 
 from users.utils import send_confirmation_code
+
 
 class UserCreateViewSet(mixins.CreateModelMixin,
                         viewsets.GenericViewSet):
@@ -48,7 +43,6 @@ class UserCreateViewSet(mixins.CreateModelMixin,
 class UserReceiveTokenViewSet(mixins.CreateModelMixin,
                               viewsets.GenericViewSet):
     """Вьюсет для получения пользователем JWT токена."""
-
     queryset = User.objects.all()
     serializer_class = UserRecieveTokenSerializer
     permission_classes = (permissions.AllowAny,)
@@ -72,7 +66,6 @@ class UserViewSet(mixins.ListModelMixin,
                   mixins.CreateModelMixin,
                   viewsets.GenericViewSet):
     """Вьюсет для обьектов модели User."""
-
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = (IsSuperUserOrIsAdminOnly,)
@@ -116,7 +109,6 @@ class UserViewSet(mixins.ListModelMixin,
                 partial=True, context={'request': request}
             )
             serializer.is_valid(raise_exception=True)
-            # serializer.save()
             serializer.save(role=request.user.role)
             return Response(serializer.data, status=status.HTTP_200_OK)
         serializer = UserSerializer(request.user)
