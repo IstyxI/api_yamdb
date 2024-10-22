@@ -3,29 +3,61 @@ from rest_framework import serializers
 from users.models import User
 
 
-class UserSerializer(serializers.ModelSerializer):
+class UserCreateSerializer(serializers.ModelSerializer):
+    """Создание объекта класса User."""
+
     class Meta:
+        model = User
+        fields = ('username', 'email')
+
+    def validate(self, data):
+        """Запрещает имя 'me'и использовать повторные username и email."""
+        if data.get('username') == 'me':
+            raise serializers.ValidationError(
+                'Использовать имя me запрещено'
+            )
+        if User.objects.filter(username=data.get('username')):
+            raise serializers.ValidationError(
+                'Пользователь с таким username уже существует'
+            )
+        if User.objects.filter(email=data.get('email')):
+            raise serializers.ValidationError(
+                'Пользователь с таким email уже существует'
+            )
+        return data
+
+
+class UserRecieveTokenSerializer(serializers.Serializer):
+    """Сериализатор для получения токена JWT."""
+
+    username = serializers.RegexField(
+        regex=r'^[\w.@+-]+$',
+        max_length=150,
+        required=True
+    )
+    confirmation_code = serializers.CharField(
+        max_length=150,
+        required=True
+    )
+
+
+class UserSerializer(serializers.ModelSerializer):
+    """Сериализатор для модели User."""
+
+    class Meta:
+        model = User
         fields = (
             'username',
             'email',
             'first_name',
             'last_name',
-            'role',
+            'bio',
+            'role'
         )
-        model = User
 
-
-class TokenSerializer(serializers.Serializer):
-    username = serializers.CharField(max_length=128)
-    confirmation_code = serializers.CharField(max_length=256)
-
-
-class RegistrationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ('email', 'username')
-
-    def validate_username(self, value):
-        if 'me' == value.lower():
-            raise serializers.ValidationError('Вы не данный пользователь.')
-        return value
+    def validate_username(self, username):
+        if username in 'me':
+            raise serializers.ValidationError(
+                'Имя me запрещено.'
+            )
+        return username

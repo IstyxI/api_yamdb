@@ -1,16 +1,28 @@
 from django.urls import include, path
-from rest_framework.routers import DefaultRouter
+from rest_framework import routers
 
 from users.views import (
-    UserViewSet,
-    registration_API_view,
-    take_confirmation_code_view
+    UserCreateViewSet,
+    UserReceiveTokenViewSet,
+    UserViewSet
 )
 
-router = DefaultRouter()
-router.register('v1/users', UserViewSet, basename='users')
+router = routers.DefaultRouter()
+router.register('users', UserViewSet, basename='users')
+auth_urls = [
+    path(
+        'signup/',
+        UserCreateViewSet.as_view({'post': 'create'}),
+        name='signup'
+    ),
+    path(
+        'token/',
+        UserReceiveTokenViewSet.as_view({'post': 'create'}),
+        name='token'
+    )
+]
+
 urlpatterns = [
-    path('', include(router.urls)),
-    path('v1/auth/signup/', registration_API_view),
-    path('v1/auth/token/', take_confirmation_code_view),
+    path('v1/auth/', include(auth_urls)),
+    path('v1/', include(router.urls))
 ]
