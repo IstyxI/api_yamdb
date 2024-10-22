@@ -31,9 +31,16 @@ class UserCreateViewSet(mixins.CreateModelMixin,
         """Создает объект класса User и
         отправляет на почту пользователя код подтверждения."""
         serializer = UserCreateSerializer(data=request.data)
+        if User.objects.filter(
+            username=request.data.get('username'),
+            email=request.data.get('email')
+        ).exists():
+            return Response(request.data, status=status.HTTP_200_OK)
+
         serializer.is_valid(raise_exception=True)
         try:
             user, _ = User.objects.get_or_create(**serializer.validated_data)
+
         except IntegrityError:
             return Response(
                 {"error": "Invalid request"},
