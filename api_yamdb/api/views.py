@@ -4,15 +4,12 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from rest_framework import viewsets, filters
 from rest_framework.pagination import LimitOffsetPagination
-from rest_framework.mixins import (
-    CreateModelMixin, DestroyModelMixin, ListModelMixin
-)
-from rest_framework.viewsets import GenericViewSet
 
 from reviews.models import Title, Category, Genre, Comment, Review
 
-from .filters import TitleFilter
-from .serializers import (
+from api.mixins import ModelMixinSet
+from api.filters import TitleFilter
+from api.serializers import (
     TitleReadSerializer,
     TitleWriteSerializer,
     CategorySerializer,
@@ -35,20 +32,14 @@ class TitleViewSet(viewsets.ModelViewSet):
         return TitleWriteSerializer
 
 
-class CategoryViewSet(
-    CreateModelMixin, ListModelMixin,
-    DestroyModelMixin, GenericViewSet
-):
+class CategoryViewSet(ModelMixinSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name',)
 
 
-class GenreViewSet(
-    CreateModelMixin, ListModelMixin,
-    DestroyModelMixin, GenericViewSet
-):
+class GenreViewSet(ModelMixinSet):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
     filter_backends = (filters.SearchFilter,)
