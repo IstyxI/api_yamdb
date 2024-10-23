@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404
 from django.db.models import Avg
 from django_filters.rest_framework import DjangoFilterBackend
 
-from rest_framework import viewsets, filters
+from rest_framework import viewsets, filters, permissions
 from rest_framework.pagination import LimitOffsetPagination
 
 from reviews.models import Title, Category, Genre, Review
@@ -21,7 +21,10 @@ from users.permissions import IsSuperUserIsAdminIsModeratorIsAuthor
 
 class ReviewViewSet(viewsets.ModelViewSet):
     serializer_class = ReviewSerializer
-    permission_classes = (IsSuperUserIsAdminIsModeratorIsAuthor,)
+    permission_classes = (
+        permissions.IsAuthenticatedOrReadOnly,
+        IsSuperUserIsAdminIsModeratorIsAuthor,
+    )
 
     def get_title_obj(self):
         return get_object_or_404(Title, pk=self.kwargs.get('title_id'))
