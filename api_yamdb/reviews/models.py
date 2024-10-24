@@ -108,7 +108,7 @@ class Comment(models.Model):
         related_name='comments',
         verbose_name='отзыв'
     )
-    created = models.DateTimeField(
+    pub_date = models.DateTimeField(
         'Дата добавления', auto_now_add=True, db_index=True
     )
 

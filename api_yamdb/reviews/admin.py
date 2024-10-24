@@ -19,7 +19,7 @@ class ReviewAdmin(admin.ModelAdmin):
 
 
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ("pk", "text", "review", "author", "created")
+    list_display = ("pk", "text", "review", "author", "pub_date")
 
 
 admin.site.register(Category, CategoryAdmin)
