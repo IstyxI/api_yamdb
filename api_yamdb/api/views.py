@@ -21,6 +21,7 @@ from users.permissions import IsSuperUserIsAdminIsModeratorIsAuthor
 
 class ReviewViewSet(viewsets.ModelViewSet):
     serializer_class = ReviewSerializer
+    http_method_names = ['get', 'post', 'patch', 'delete']
     permission_classes = (
         permissions.IsAuthenticatedOrReadOnly,
         IsSuperUserIsAdminIsModeratorIsAuthor,
