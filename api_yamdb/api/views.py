@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404
 from django.db.models import Avg
 from django_filters.rest_framework import DjangoFilterBackend
 
-from rest_framework import viewsets, filters, permissions
+from rest_framework import viewsets, permissions
 from rest_framework.pagination import LimitOffsetPagination
 
 from reviews.models import Title, Category, Genre, Review
