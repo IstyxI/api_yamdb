@@ -16,7 +16,11 @@ from api.serializers import (
     CommentSerializer,
     ReviewSerializer
 )
-from users.permissions import IsSuperUserIsAdminIsModeratorIsAuthor
+from users.permissions import (
+    IsSuperUserIsAdminIsModeratorIsAuthor,
+    AnonimReadOnly,
+    IsSuperUserOrIsAdminOnly
+)
 
 
 class ReviewViewSet(viewsets.ModelViewSet):
@@ -63,9 +67,10 @@ class CategoryViewSet(ModelMixinSet):
 class GenreViewSet(ModelMixinSet):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
-    permission_classes = (IsSuperUserIsAdminIsModeratorIsAuthor,)
+    permission_classes = (AnonimReadOnly | IsSuperUserOrIsAdminOnly,)
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name',)
+    lookup_field = 'slug'
 
 
 class CommentViewSet(viewsets.ModelViewSet):
