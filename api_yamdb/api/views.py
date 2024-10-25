@@ -76,7 +76,10 @@ class GenreViewSet(ModelMixinSet):
 
 class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsSuperUserIsAdminIsModeratorIsAuthor,)
+    permission_classes = (
+        permissions.IsAuthenticatedOrReadOnly,
+        IsSuperUserIsAdminIsModeratorIsAuthor
+    )
     http_method_names = ['get', 'post', 'patch', 'delete']
 
     def get_queryset(self):
