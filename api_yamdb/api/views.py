@@ -59,9 +59,10 @@ class TitleViewSet(viewsets.ModelViewSet):
 class CategoryViewSet(ModelMixinSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    permission_classes = (IsSuperUserIsAdminIsModeratorIsAuthor,)
+    permission_classes = (AnonimReadOnly | IsSuperUserOrIsAdminOnly,)
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name',)
+    lookup_field = 'slug'
 
 
 class GenreViewSet(ModelMixinSet):
