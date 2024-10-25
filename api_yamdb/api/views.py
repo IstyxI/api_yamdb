@@ -43,12 +43,12 @@ class ReviewViewSet(viewsets.ModelViewSet):
 
 
 class TitleViewSet(viewsets.ModelViewSet):
-    queryset = Title.objects.annotate(
-        rating=Avg('reviews__score')
-    ).all()
+    queryset = Title.objects.annotate(rating=Avg('reviews__score')).all()
     pagination_class = LimitOffsetPagination
     filter_backends = (DjangoFilterBackend,)
     filterset_class = TitleFilter
+    permission_classes = (AnonimReadOnly | IsSuperUserOrIsAdminOnly,)
+    http_method_names = ['get', 'post', 'patch', 'delete']
 
     def get_serializer_class(self):
         if self.action in ('list', 'retrieve'):
@@ -59,19 +59,11 @@ class TitleViewSet(viewsets.ModelViewSet):
 class CategoryViewSet(ModelMixinSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    permission_classes = (AnonimReadOnly | IsSuperUserOrIsAdminOnly,)
-    filter_backends = (filters.SearchFilter,)
-    search_fields = ('name',)
-    lookup_field = 'slug'
 
 
 class GenreViewSet(ModelMixinSet):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
-    permission_classes = (AnonimReadOnly | IsSuperUserOrIsAdminOnly,)
-    filter_backends = (filters.SearchFilter,)
-    search_fields = ('name',)
-    lookup_field = 'slug'
 
 
 class CommentViewSet(viewsets.ModelViewSet):

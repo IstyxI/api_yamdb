@@ -3,8 +3,14 @@ from rest_framework.mixins import (
     DestroyModelMixin,
     ListModelMixin)
 from rest_framework.viewsets import GenericViewSet
+from rest_framework import filters
+
+from users.permissions import AnonimReadOnly, IsSuperUserOrIsAdminOnly
 
 
 class ModelMixinSet(CreateModelMixin, ListModelMixin,
                     DestroyModelMixin, GenericViewSet):
-    pass
+    permission_classes = (AnonimReadOnly | IsSuperUserOrIsAdminOnly,)
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('name',)
+    lookup_field = 'slug'
