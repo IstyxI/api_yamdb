@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import permissions, viewsets
 from rest_framework.pagination import LimitOffsetPagination
-from reviews.models import Category, Genre, Review, Title
+from reviews.models import Category, Genre, Review, Title, Comment
 
 from api.filters import TitleFilter
 from api.mixins import ModelMixinSet
@@ -39,7 +39,7 @@ class ReviewViewSet(viewsets.ModelViewSet):
 class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.annotate(
         rating=Avg('reviews__score')
-    ).all()
+    ).select_related('category')
     pagination_class = LimitOffsetPagination
     filter_backends = (DjangoFilterBackend,)
     filterset_class = TitleFilter
@@ -71,10 +71,10 @@ class CommentViewSet(viewsets.ModelViewSet):
     http_method_names = ['get', 'post', 'patch', 'delete']
 
     def get_queryset(self):
-        review = get_object_or_404(
-            Review,
-            id=self.kwargs.get('review_id'))
-        return review.comments.all()
+        review_id = self.kwargs.get('review_id')
+        return Comment.objects.filter(
+            review_id=review_id
+        ).select_related('author')
 
     def perform_create(self, serializer):
         review = get_object_or_404(
