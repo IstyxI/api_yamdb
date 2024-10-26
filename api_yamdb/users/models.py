@@ -6,6 +6,7 @@ from users.enums import UserRoles
 
 
 class User(AbstractUser):
+    
     username = models.CharField(
         max_length=150,
         verbose_name='Никнейм',
@@ -46,6 +47,8 @@ class User(AbstractUser):
         verbose_name='Биография',
         blank=True
     )
+
+    USERNAME_FIELD = 'username'
 
     class Meta:
         ordering = ('username', 'id')
