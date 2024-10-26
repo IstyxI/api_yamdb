@@ -51,7 +51,7 @@ class Title(models.Model):
         verbose_name_plural = 'произведения'
 
     def __str__(self):
-        return f'{self.name[:20]}...'
+        return self.name
 
 
 class Review(models.Model):
@@ -61,7 +61,7 @@ class Review(models.Model):
         related_name='reviews',
         verbose_name='произведение'
     )
-    text = models.TextField()
+    text = models.TextField(verbose_name='Текст')
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -69,7 +69,7 @@ class Review(models.Model):
         verbose_name='автор',
         default=None
     )
-    score = models.IntegerField(
+    score = models.PositiveSmallIntegerField(
         'оценка',
         validators=(MinValueValidator(1), MaxValueValidator(10)),
         error_messages={'validators': 'Оценка от 1 до 10!'}
@@ -86,12 +86,12 @@ class Review(models.Model):
         constraints = [
             models.UniqueConstraint(
                 fields=('title', 'author',),
-                name='unique review'
+                name='unique_review'
             )]
         ordering = ('-pub_date',)
 
     def __str__(self):
-        return self.text
+        return f'{self.text[:20]}...'
 
 
 class Comment(models.Model):
@@ -115,3 +115,6 @@ class Comment(models.Model):
     class Meta:
         verbose_name = 'Комментарий'
         verbose_name_plural = 'коментарии'
+
+    def __str__(self):
+        return self.text

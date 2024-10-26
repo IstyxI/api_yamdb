@@ -1,21 +1,17 @@
-from django.db.utils import IntegrityError
 from django.contrib.auth.tokens import default_token_generator
+from django.db.utils import IntegrityError
 from django.shortcuts import get_object_or_404
+
 from rest_framework import filters, mixins, permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import AccessToken
 
 from users.models import User
-
 from users.permissions import IsSuperUserOrIsAdminOnly
-
 from users.serializers import (
-    UserCreateSerializer,
-    UserRecieveTokenSerializer,
-    UserSerializer
+    UserCreateSerializer, UserRecieveTokenSerializer, UserSerializer,
 )
-
 from users.utils import send_confirmation_code
 
 

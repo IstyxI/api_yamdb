@@ -1,25 +1,19 @@
+from django.db.models import Avg, F
 from django.shortcuts import get_object_or_404
-from django.db.models import Avg
+
 from django_filters.rest_framework import DjangoFilterBackend
-
-from rest_framework import viewsets, permissions
+from rest_framework import permissions, viewsets
 from rest_framework.pagination import LimitOffsetPagination
+from reviews.models import Category, Genre, Review, Title
 
-from reviews.models import Title, Category, Genre, Review
-from api.mixins import ModelMixinSet
 from api.filters import TitleFilter
+from api.mixins import ModelMixinSet
 from api.serializers import (
-    TitleReadSerializer,
-    TitleWriteSerializer,
-    CategorySerializer,
-    GenreSerializer,
-    CommentSerializer,
-    ReviewSerializer
+    CategorySerializer, CommentSerializer, GenreSerializer, ReviewSerializer,
+    TitleReadSerializer, TitleWriteSerializer,
 )
 from users.permissions import (
-    IsSuperUserIsAdminIsModeratorIsAuthor,
-    AnonimReadOnly,
-    IsSuperUserOrIsAdminOnly
+    AnonimReadOnly, IsSuperUserIsAdminIsModeratorIsAuthor, IsSuperUserOrIsAdminOnly,
 )
 
 
@@ -43,7 +37,9 @@ class ReviewViewSet(viewsets.ModelViewSet):
 
 
 class TitleViewSet(viewsets.ModelViewSet):
-    queryset = Title.objects.annotate(rating=Avg('reviews__score')).all()
+    queryset = Title.objects.annotate(
+        rating=Avg('reviews__score')
+    ).all()
     pagination_class = LimitOffsetPagination
     filter_backends = (DjangoFilterBackend,)
     filterset_class = TitleFilter

@@ -1,14 +1,14 @@
-from rest_framework import serializers
 from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
 
-from reviews.models import Title, Genre, Category, Comment, Review
+from rest_framework import serializers
+from reviews.models import Category, Comment, Genre, Review, Title
 
 
 class GenreSerializer(serializers.ModelSerializer):
     class Meta:
         model = Genre
-        exclude = ('id', )
+        fields = ('name', 'slug')
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -29,7 +29,7 @@ class CommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
-        fields = '__all__'
+        fields = ('text', 'author', 'review', 'pub_date', 'id')
         read_only_fields = ('author', 'post', 'review')
 
 
@@ -42,7 +42,9 @@ class TitleReadSerializer(serializers.ModelSerializer):
     rating = serializers.IntegerField(read_only=True)
 
     class Meta:
-        fields = '__all__'
+        fields = (
+            'name', 'year', 'description', 'genre', 'category', 'id', 'rating'
+        )
         model = Title
 
 
@@ -90,5 +92,5 @@ class ReviewSerializer(serializers.ModelSerializer):
         return data
 
     class Meta:
-        fields = '__all__'
+        fields = ('title', 'text', 'author', 'score', 'pub_date', 'id')
         model = Review
