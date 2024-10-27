@@ -11,18 +11,10 @@ class UserCreateSerializer(serializers.ModelSerializer):
         fields = ('username', 'email')
 
     def validate(self, data):
-        """Запрещает имя 'me'и использовать повторные username и email."""
-        if data.get('username') == 'me':
-            raise serializers.ValidationError(
-                'Использовать имя me запрещено'
-            )
-        if User.objects.filter(username=data.get('username')):
+        """Запрещает использовать повторно username и email."""
+        if User.objects.filter(username=data.get('username')).exists():
             raise serializers.ValidationError(
                 'Пользователь с таким username уже существует'
-            )
-        if User.objects.filter(email=data.get('email')):
-            raise serializers.ValidationError(
-                'Пользователь с таким email уже существует'
             )
         return data
 

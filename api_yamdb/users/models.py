@@ -3,25 +3,23 @@ from django.core.validators import RegexValidator
 from django.db import models
 
 from users.enums import UserRoles
+from users.validators import validate_username_email
 
 
 class User(AbstractUser):
-    
+
     username = models.CharField(
         max_length=150,
         verbose_name='Никнейм',
         unique=True,
         db_index=True,
-        validators=[RegexValidator(
-            regex=r'^[\w.@+-]+$',
-            message='Никнейм содержит недопустимый символ.'
-        )]
+        validators=(validate_username_email,)
     )
-
     email = models.EmailField(
         max_length=254,
         verbose_name='email',
-        unique=True
+        unique=True,
+        validators=(validate_username_email,)
     )
 
     first_name = models.CharField(
