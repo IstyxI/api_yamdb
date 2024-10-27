@@ -48,6 +48,13 @@ class User(AbstractUser):
         blank=True
     )
 
+    confirmation_code = models.CharField(
+        max_length=150,
+        blank=True,
+        verbose_name='Код подтверждения',
+        help_text='Введите код подтверждения из письма',
+    )
+
     USERNAME_FIELD = 'username'
 
     class Meta:

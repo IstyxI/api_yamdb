@@ -35,6 +35,11 @@ class UserCreateViewSet(mixins.CreateModelMixin,
             username=request.data.get('username'),
             email=request.data.get('email')
         ).exists():
+            user = get_object_or_404(User, username=request.data.get('username'))
+            send_confirmation_code(
+                email=request.data.get('email'),
+                confirmation_code=user.confirmation_code
+            )
             return Response(request.data, status=status.HTTP_200_OK)
 
         serializer.is_valid(raise_exception=True)
