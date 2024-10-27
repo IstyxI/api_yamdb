@@ -39,8 +39,8 @@ class User(AbstractUser):
     role = models.CharField(
         max_length=32,
         verbose_name='Роль',
-        choices=UserRoles.choices(),
-        default=UserRoles.user.name
+        choices=UserRoles.choices,
+        default=UserRoles.USER
     )
 
     bio = models.TextField(
@@ -64,15 +64,15 @@ class User(AbstractUser):
 
     @property
     def is_admin(self):
-        return self.role == UserRoles.admin.name
+        return self.role == UserRoles.ADMIN
 
     @property
     def is_moderator(self):
-        return self.role == UserRoles.moderator.name
+        return self.role == UserRoles.MODERATOR
 
     @property
     def is_user(self):
-        return self.role == UserRoles.user.name
+        return self.role == UserRoles.USER
 
     def __str__(self):
         return self.username
