@@ -30,11 +30,17 @@ class UserCreateViewSet(mixins.CreateModelMixin,
     def create(self, request):
         """Создает объект класса User и
         отправляет на почту пользователя код подтверждения."""
+
         serializer = UserCreateSerializer(data=request.data)
         if User.objects.filter(
             username=request.data.get('username'),
             email=request.data.get('email')
         ).exists():
+            user = get_object_or_404(User, username=request.data.get('username'))
+            send_confirmation_code(
+                email=request.data.get('email'),
+                confirmation_code=user.confirmation_code
+            )
             return Response(request.data, status=status.HTTP_200_OK)
 
         serializer.is_valid(raise_exception=True)
@@ -58,12 +64,14 @@ class UserCreateViewSet(mixins.CreateModelMixin,
 class UserReceiveTokenViewSet(mixins.CreateModelMixin,
                               viewsets.GenericViewSet):
     """Вьюсет для получения пользователем JWT токена."""
+
     queryset = User.objects.all()
     serializer_class = UserRecieveTokenSerializer
     permission_classes = (permissions.AllowAny,)
 
     def create(self, request, *args, **kwargs):
         """Предоставляет JWT токен для кода подтверждения."""
+
         serializer = UserRecieveTokenSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         username = serializer.validated_data.get('username')
@@ -81,6 +89,7 @@ class UserViewSet(mixins.ListModelMixin,
                   mixins.CreateModelMixin,
                   viewsets.GenericViewSet):
     """Вьюсет для обьектов модели User."""
+
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = (IsSuperUserOrIsAdminOnly,)
@@ -96,6 +105,7 @@ class UserViewSet(mixins.ListModelMixin,
     def get_user_by_username(self, request, username):
         """Получение данных пользователя по его username и
         управление ими."""
+
         user = get_object_or_404(User, username=username)
         if request.method == 'PATCH':
             serializer = UserSerializer(user, data=request.data, partial=True)
@@ -118,6 +128,7 @@ class UserViewSet(mixins.ListModelMixin,
     def get_me_data(self, request):
         """Позволяет пользователю получить подробную информацию о себе
         и редактировать её."""
+
         if request.method == 'PATCH':
             serializer = UserSerializer(
                 request.user, data=request.data,
