@@ -8,7 +8,7 @@ from rest_framework_simplejwt.tokens import AccessToken
 
 from api.permissions import IsSuperUserOrIsAdminOnly
 from users.models import User
-from users.serializers import (
+from api.serializers import (
     UserCreateSerializer,
     UserRecieveTokenSerializer,
     UserSerializer
