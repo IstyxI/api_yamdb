@@ -1,32 +1,25 @@
-from django.shortcuts import get_object_or_404
 from django.contrib.auth.tokens import default_token_generator
 from django.db.models import Avg
 from django.db.utils import IntegrityError
+from django.shortcuts import get_object_or_404
+
 from django_filters.rest_framework import DjangoFilterBackend
-from reviews.models import Title, Category, Genre, Comment, Review
-from rest_framework import viewsets, filters, permissions, mixins, status
-from rest_framework.pagination import LimitOffsetPagination
+from rest_framework import filters, mixins, permissions, status, viewsets
 from rest_framework.decorators import action
+from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import AccessToken
+from reviews.models import Category, Comment, Genre, Review, Title
 
 from api.filters import TitleFilter
 from api.mixins import ModelMixinSet
-from api.serializers import (
-    TitleReadSerializer,
-    TitleWriteSerializer,
-    CategorySerializer,
-    GenreSerializer,
-    CommentSerializer,
-    ReviewSerializer,
-    UserCreateSerializer,
-    UserRecieveTokenSerializer,
-    UserSerializer
-)
 from api.permissions import (
-    IsSuperUserIsAdminIsModeratorIsAuthor,
-    AnonimReadOnly,
-    IsSuperUserOrIsAdminOnly
+    AnonimReadOnly, IsSuperUserIsAdminIsModeratorIsAuthor, IsSuperUserOrIsAdminOnly,
+)
+from api.serializers import (
+    CategorySerializer, CommentSerializer, GenreSerializer, ReviewSerializer,
+    TitleReadSerializer, TitleWriteSerializer, UserCreateSerializer,
+    UserRecieveTokenSerializer, UserSerializer,
 )
 from users.models import User
 from users.utils import send_confirmation_code

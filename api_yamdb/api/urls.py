@@ -3,14 +3,8 @@ from django.urls import include, path
 from rest_framework import routers
 
 from api.views import (
-    TitleViewSet,
-    CategoryViewSet,
-    GenreViewSet,
-    CommentViewSet,
-    ReviewViewSet,
-    UserViewSet,
-    UserCreateViewSet,
-    UserReceiveTokenViewSet
+    CategoryViewSet, CommentViewSet, GenreViewSet, ReviewViewSet, TitleViewSet,
+    UserCreateViewSet, UserReceiveTokenViewSet, UserViewSet,
 )
 
 router = routers.DefaultRouter()
