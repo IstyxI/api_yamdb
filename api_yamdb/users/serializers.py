@@ -47,10 +47,3 @@ class UserSerializer(serializers.ModelSerializer):
             'bio',
             'role'
         )
-
-    def validate_username(self, username):
-        if username in 'me':
-            raise serializers.ValidationError(
-                'Имя me запрещено.'
-            )
-        return username
