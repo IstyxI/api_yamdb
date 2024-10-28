@@ -41,15 +41,18 @@ class ReviewViewSet(viewsets.ModelViewSet):
         IsSuperUserIsAdminIsModeratorIsAuthor,
     )
 
-    def get_title_obj(self):
-        return get_object_or_404(Title, pk=self.kwargs.get('title_id'))
-
     def get_queryset(self):
-        title = self.get_title_obj()
-        return title.reviews.all()
+        title = get_object_or_404(
+            Title,
+            id=self.kwargs.get('title_id')
+        )
+        return title.reviews.all().select_related('author')
 
     def perform_create(self, serializer):
-        serializer.save(author=self.request.user, title=self.get_title_obj())
+        serializer.save(
+            author=self.request.user,
+            title=get_object_or_404(Title, id=self.kwargs.get('title_id'))
+        )
 
 
 class TitleViewSet(viewsets.ModelViewSet):
