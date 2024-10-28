@@ -14,7 +14,8 @@ from reviews.models import Category, Comment, Genre, Review, Title
 from api.filters import TitleFilter
 from api.mixins import ModelMixinSet
 from api.permissions import (
-    AnonimReadOnly, IsSuperUserIsAdminIsModeratorIsAuthor, IsSuperUserOrIsAdminOnly,
+    AnonimReadOnly, IsSuperUserIsAdminIsModeratorIsAuthor,
+    IsSuperUserOrIsAdminOnly,
 )
 from api.serializers import (
     CategorySerializer, CommentSerializer, GenreSerializer, ReviewSerializer,
