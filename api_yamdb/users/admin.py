@@ -1,10 +1,10 @@
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
 from users.models import User
 
 
-@admin.register(User)
-class UserAdmin(admin.ModelAdmin):
+class UserAdmin(BaseUserAdmin):
 
     list_display = (
         'pk',
@@ -19,3 +19,6 @@ class UserAdmin(admin.ModelAdmin):
     list_editable = ('role',)
     list_filter = ('username', 'id')
     search_fields = ('username', 'role')
+
+
+admin.site.register(User, UserAdmin)
