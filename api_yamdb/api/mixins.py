@@ -5,7 +5,7 @@ from rest_framework.mixins import (
 from rest_framework.viewsets import GenericViewSet
 from rest_framework import filters
 
-from users.permissions import AnonimReadOnly, IsSuperUserOrIsAdminOnly
+from api.permissions import AnonimReadOnly, IsSuperUserOrIsAdminOnly
 
 
 class ModelMixinSet(CreateModelMixin, ListModelMixin,

@@ -16,7 +16,7 @@ from api.serializers import (
     CommentSerializer,
     ReviewSerializer
 )
-from users.permissions import (
+from api.permissions import (
     IsSuperUserIsAdminIsModeratorIsAuthor,
     AnonimReadOnly,
     IsSuperUserOrIsAdminOnly

@@ -6,16 +6,13 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import AccessToken
 
+from api.permissions import IsSuperUserOrIsAdminOnly
 from users.models import User
-
-from users.permissions import IsSuperUserOrIsAdminOnly
-
 from users.serializers import (
     UserCreateSerializer,
     UserRecieveTokenSerializer,
     UserSerializer
 )
-
 from users.utils import send_confirmation_code
 
 
@@ -36,7 +33,10 @@ class UserCreateViewSet(mixins.CreateModelMixin,
             username=request.data.get('username'),
             email=request.data.get('email')
         ).exists():
-            user = get_object_or_404(User, username=request.data.get('username'))
+            user = get_object_or_404(
+                User,
+                username=request.data.get('username')
+            )
             send_confirmation_code(
                 email=request.data.get('email'),
                 confirmation_code=user.confirmation_code
