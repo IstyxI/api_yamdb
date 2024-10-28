@@ -1,12 +1,8 @@
-from enum import Enum
+from django.db import models
 
 
-class UserRoles(Enum):
+class UserRoles(models.TextChoices):
 
-    user = 'user'
-    moderator = 'moderator'
-    admin = 'admin'
-
-    @classmethod
-    def choices(cls):
-        return tuple((attribute.name, attribute.value) for attribute in cls)
+    USER = 'user'
+    MODERATOR = 'moderator'
+    ADMIN = 'admin'
