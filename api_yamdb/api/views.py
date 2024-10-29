@@ -9,7 +9,6 @@ from rest_framework.decorators import action
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import AccessToken
-from reviews.models import Category, Comment, Genre, Review, Title
 
 from api.filters import TitleFilter
 from api.mixins import ModelMixinSet
@@ -22,6 +21,7 @@ from api.serializers import (
     TitleReadSerializer, TitleWriteSerializer, UserCreateSerializer,
     UserRecieveTokenSerializer, UserSerializer,
 )
+from reviews.models import Category, Comment, Genre, Review, Title
 from users.models import User
 from users.utils import send_confirmation_code
 
@@ -51,7 +51,7 @@ class ReviewViewSet(viewsets.ModelViewSet):
 class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.annotate(
         rating=Avg('reviews__score')
-    ).select_related('category')
+    ).select_related('category').prefetch_related('genre')
     pagination_class = LimitOffsetPagination
     filter_backends = (DjangoFilterBackend,)
     filterset_class = TitleFilter
