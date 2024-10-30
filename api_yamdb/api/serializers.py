@@ -107,7 +107,6 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         """Запрещает использовать повторно username и email."""
-
         if User.objects.filter(username=data.get('username')).exists():
             raise serializers.ValidationError(
                 'Пользователь с таким username уже существует'

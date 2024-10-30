@@ -35,11 +35,10 @@ class ReviewViewSet(viewsets.ModelViewSet):
     )
 
     def get_queryset(self):
-        title = get_object_or_404(
-            Title,
-            id=self.kwargs.get('title_id')
-        )
-        return title.reviews.all().select_related('author')
+        title_id = self.kwargs.get('title_id')
+        return Review.objects.filter(
+            title_id=title_id
+        ).select_related('author')
 
     def perform_create(self, serializer):
         serializer.save(
@@ -104,14 +103,12 @@ class UserCreateViewSet(mixins.CreateModelMixin,
     permission_classes = (permissions.AllowAny,)
 
     def create(self, request):
-        """Создает объект класса User и
-        отправляет на почту пользователя код подтверждения."""
-
+        """Создает объект User и отправляет пользователю код подтверждения."""
         serializer = UserCreateSerializer(data=request.data)
         if User.objects.filter(
             username=request.data.get('username'),
             email=request.data.get('email')
-        ).exists():
+        ).first():
             user = get_object_or_404(
                 User,
                 username=request.data.get('username')
@@ -128,7 +125,7 @@ class UserCreateViewSet(mixins.CreateModelMixin,
 
         except IntegrityError:
             return Response(
-                {"error": "Invalid request"},
+                {'error': 'Invalid request'},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
@@ -150,7 +147,6 @@ class UserReceiveTokenViewSet(mixins.CreateModelMixin,
 
     def create(self, request, *args, **kwargs):
         """Предоставляет JWT токен для кода подтверждения."""
-
         serializer = UserRecieveTokenSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         username = serializer.validated_data.get('username')
@@ -182,9 +178,7 @@ class UserViewSet(mixins.ListModelMixin,
         url_name='get_user'
     )
     def get_user_by_username(self, request, username):
-        """Получение данных пользователя по его username и
-        управление ими."""
-
+        """Получение данных пользователя по его username и управление ими."""
         user = get_object_or_404(User, username=username)
         if request.method == 'PATCH':
             serializer = UserSerializer(user, data=request.data, partial=True)
@@ -205,9 +199,7 @@ class UserViewSet(mixins.ListModelMixin,
         permission_classes=(permissions.IsAuthenticated,)
     )
     def get_me_data(self, request):
-        """Позволяет пользователю получить подробную информацию о себе
-        и редактировать её."""
-
+        """Получение подробной информации о себе и её редактирование."""
         if request.method == 'PATCH':
             serializer = UserSerializer(
                 request.user, data=request.data,
