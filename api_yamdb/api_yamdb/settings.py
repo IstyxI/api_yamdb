@@ -22,8 +22,7 @@ INSTALLED_APPS = [
     'django_filters',
     'reviews.apps.ReviewsConfig',
     'users.apps.UsersConfig',
-    'api.apps.ApiConfig',
-    'flake8'
+    'api.apps.ApiConfig'
 ]
 
 MIDDLEWARE = [
