@@ -5,6 +5,8 @@ from users.models import User
 
 
 class Genre(models.Model):
+    """Модель жанра."""
+
     name = models.CharField('Название группы', max_length=256, blank=False)
     slug = models.SlugField('Слаг', unique=True)
 
@@ -17,6 +19,8 @@ class Genre(models.Model):
 
 
 class Category(models.Model):
+    """Модель категории."""
+
     name = models.CharField('Название группы', max_length=256, blank=False)
     slug = models.SlugField('Слаг', unique=True, max_length=50, blank=False)
 
@@ -29,6 +33,8 @@ class Category(models.Model):
 
 
 class Title(models.Model):
+    """Модель произведения."""
+
     name = models.TextField('Название', max_length=256, blank=False)
     year = models.IntegerField('Год выпуска', blank=False)
     description = models.TextField('Описание', blank=True)
@@ -55,6 +61,8 @@ class Title(models.Model):
 
 
 class Review(models.Model):
+    """Модель отзыва."""
+
     title = models.ForeignKey(
         Title,
         on_delete=models.CASCADE,
@@ -95,6 +103,8 @@ class Review(models.Model):
 
 
 class Comment(models.Model):
+    """Модель комментария."""
+
     text = models.TextField('текст комментария', max_length=200)
     author = models.ForeignKey(
         User,

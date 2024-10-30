@@ -27,6 +27,8 @@ from users.utils import send_confirmation_code
 
 
 class ReviewViewSet(viewsets.ModelViewSet):
+    """Ревью сет реализующий возможность запросов к отзывам на произведения."""
+
     serializer_class = ReviewSerializer
     http_method_names = ['get', 'post', 'patch', 'delete']
     permission_classes = (
@@ -48,6 +50,8 @@ class ReviewViewSet(viewsets.ModelViewSet):
 
 
 class TitleViewSet(viewsets.ModelViewSet):
+    """Ревью сет реализующий возможность запросов произведениям."""
+
     queryset = Title.objects.annotate(
         rating=Avg('reviews__score')
     ).select_related('category').prefetch_related('genre')
@@ -58,22 +62,29 @@ class TitleViewSet(viewsets.ModelViewSet):
     http_method_names = ['get', 'post', 'patch', 'delete']
 
     def get_serializer_class(self):
+        """Меняет сериализатор в зависимоти от метода запроса."""
         if self.action in ('list', 'retrieve'):
             return TitleReadSerializer
         return TitleWriteSerializer
 
 
 class CategoryViewSet(ModelMixinSet):
+    """Ревью сет реализующий возможность запросов категориям."""
+
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
 
 
 class GenreViewSet(ModelMixinSet):
+    """Ревью сет реализующий возможность запросов жанрам."""
+
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
 
 
 class CommentViewSet(viewsets.ModelViewSet):
+    """Ревью сет реализующий возможность запросов комментариям."""
+
     serializer_class = CommentSerializer
     permission_classes = (
         permissions.IsAuthenticatedOrReadOnly,
@@ -82,12 +93,14 @@ class CommentViewSet(viewsets.ModelViewSet):
     http_method_names = ['get', 'post', 'patch', 'delete']
 
     def get_queryset(self):
+        """Возвращает комментарий автора."""
         review_id = self.kwargs.get('review_id')
         return Comment.objects.filter(
             review_id=review_id
         ).select_related('author')
 
     def perform_create(self, serializer):
+        """Сохраняет комментарий и присваевает ему автора."""
         review = get_object_or_404(
             Review,
             id=self.kwargs.get('review_id'))

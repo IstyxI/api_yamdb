@@ -8,18 +8,24 @@ from users.models import User
 
 
 class GenreSerializer(serializers.ModelSerializer):
+    """Сериализатор жанра."""
+
     class Meta:
         model = Genre
         fields = ('name', 'slug')
 
 
 class CategorySerializer(serializers.ModelSerializer):
+    """Сериализатор категории."""
+
     class Meta:
         fields = ('name', 'slug')
         model = Category
 
 
 class CommentSerializer(serializers.ModelSerializer):
+    """Сериализатор комментария."""
+
     review = serializers.SlugRelatedField(
         slug_field='text',
         read_only=True
@@ -36,6 +42,8 @@ class CommentSerializer(serializers.ModelSerializer):
 
 
 class TitleReadSerializer(serializers.ModelSerializer):
+    """Сериализатор для произведения при 'безопасном' запросе."""
+
     category = CategorySerializer(read_only=True)
     genre = GenreSerializer(
         read_only=True,
@@ -51,6 +59,8 @@ class TitleReadSerializer(serializers.ModelSerializer):
 
 
 class TitleWriteSerializer(serializers.ModelSerializer):
+    """Сериализатор произведения."""
+
     category = serializers.SlugRelatedField(
         queryset=Category.objects.all(),
         slug_field='slug'
@@ -67,6 +77,8 @@ class TitleWriteSerializer(serializers.ModelSerializer):
 
 
 class ReviewSerializer(serializers.ModelSerializer):
+    """Сериализатор отзыва на произведение."""
+
     title = serializers.SlugRelatedField(
         slug_field='name',
         read_only=True
@@ -77,11 +89,13 @@ class ReviewSerializer(serializers.ModelSerializer):
     )
 
     def validate_score(self, value):
+        """Проверяет оценку на корректное значение."""
         if 0 > value > 10:
             raise serializers.ValidationError('Оценка по 10-бальной шкале!')
         return value
 
     def validate(self, data):
+        """Детальная проверка отправляемого запроса."""
         request = self.context['request']
         author = request.user
         title_id = self.context.get('view').kwargs.get('title_id')

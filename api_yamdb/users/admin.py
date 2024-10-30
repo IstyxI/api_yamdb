@@ -5,6 +5,8 @@ from users.models import User
 
 
 class UserAdmin(BaseUserAdmin):
+    """Модель админа."""
+
     list_display = (
         'pk',
         'username',
