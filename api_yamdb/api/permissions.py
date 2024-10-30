@@ -9,7 +9,8 @@ class AnonimReadOnly(permissions.BasePermission):
 
 
 class IsSuperUserOrIsAdminOnly(permissions.BasePermission):
-    """
+    """Права на запросы.
+
     Права на запросы только для суперпользователя Джанго,
     админа Джанго или аутентифицированному пользователю с ролью admin.
     """
@@ -24,8 +25,8 @@ class IsSuperUserOrIsAdminOnly(permissions.BasePermission):
 
 
 class IsSuperUserIsAdminIsModeratorIsAuthor(permissions.BasePermission):
-    """
-    Право анониму осуществлять только безопасные запросы.
+    """Право анониму осуществлять только безопасные запросы.
+
     Доступ к запросам PATCH и DELETE предоставляется только
     суперпользователю Джанго, админу Джанго, аутентифицированным пользователям
     с ролью admin или moderator, а также автору объекта.
