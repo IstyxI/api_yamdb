@@ -6,6 +6,7 @@ from users.validators import validate_username_email
 
 
 class User(AbstractUser):
+    """Модель пользователя."""
 
     username = models.CharField(
         max_length=150,
@@ -59,6 +60,9 @@ class User(AbstractUser):
         verbose_name = 'User'
         verbose_name_plural = 'Пользователи'
 
+    def __str__(self):
+        return self.username
+
     @property
     def is_admin(self):
         return self.role == UserRoles.ADMIN or self.is_superuser
@@ -70,6 +74,3 @@ class User(AbstractUser):
     @property
     def is_user(self):
         return self.role == UserRoles.USER
-
-    def __str__(self):
-        return self.username
