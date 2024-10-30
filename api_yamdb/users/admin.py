@@ -5,7 +5,6 @@ from users.models import User
 
 
 class UserAdmin(BaseUserAdmin):
-
     list_display = (
         'pk',
         'username',
