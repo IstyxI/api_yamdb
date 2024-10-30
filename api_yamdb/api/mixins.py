@@ -9,7 +9,10 @@ from api.permissions import AnonimReadOnly, IsSuperUserOrIsAdminOnly
 
 class ModelMixinSet(CreateModelMixin, ListModelMixin,
                     DestroyModelMixin, GenericViewSet):
-    """Миксин реализующий создание, вывод всех объектов, а также удаление объекта."""
+    """Миксин для views.
+
+    Миксин реализующий создание, вывод всех объектов, а также удаление объекта.
+    """
 
     permission_classes = (AnonimReadOnly | IsSuperUserOrIsAdminOnly,)
     filter_backends = (filters.SearchFilter,)

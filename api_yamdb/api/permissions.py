@@ -5,6 +5,7 @@ class AnonimReadOnly(permissions.BasePermission):
     """Разрешает анонимному пользователю безопасные запросы."""
 
     def has_permission(self, request, view):
+        """Проверяет является ли запрос 'безопасным'."""
         return request.method in permissions.SAFE_METHODS
 
 
@@ -16,6 +17,7 @@ class IsSuperUserOrIsAdminOnly(permissions.BasePermission):
     """
 
     def has_permission(self, request, view):
+        """Проверяет есть ли у пользователя права на действие."""
         return (
             request.user.is_authenticated
             and (request.user.is_superuser
@@ -33,6 +35,7 @@ class IsSuperUserIsAdminIsModeratorIsAuthor(permissions.BasePermission):
     """
 
     def has_object_permission(self, request, view, obj):
+        """Проверяет есть ли права на запрос."""
         return (
             request.method in permissions.SAFE_METHODS
             or request.user.is_authenticated
