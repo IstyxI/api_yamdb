@@ -41,8 +41,6 @@ class ReviewViewSet(viewsets.ModelViewSet):
     )
 
     def get_queryset(self):
-        # review_id = self.kwargs.get('review_id')
-        # return Comment.objects.filter(review_id=review_id).select_related('author')
         title_id = self.kwargs.get('title_id')
         return Review.objects.filter(title_id=title_id).select_related('author')
 
