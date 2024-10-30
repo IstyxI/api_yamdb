@@ -42,7 +42,9 @@ class ReviewViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         title_id = self.kwargs.get('title_id')
-        return Review.objects.filter(title_id=title_id).select_related('author')
+        return Review.objects.filter(
+            title_id=title_id
+        ).select_related('author')
 
     def perform_create(self, serializer):
         serializer.save(
