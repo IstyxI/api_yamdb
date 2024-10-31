@@ -88,6 +88,10 @@ class ReviewSerializer(serializers.ModelSerializer):
         read_only=True
     )
 
+    class Meta:
+        fields = ('title', 'text', 'author', 'score', 'pub_date', 'id')
+        model = Review
+
     def validate_score(self, value):
         """Проверяет оценку на корректное значение."""
         if 0 > value > 10:
@@ -106,10 +110,6 @@ class ReviewSerializer(serializers.ModelSerializer):
         ):
             raise ValidationError('Может существовать только один отзыв!')
         return data
-
-    class Meta:
-        fields = ('title', 'text', 'author', 'score', 'pub_date', 'id')
-        model = Review
 
 
 class UserCreateSerializer(serializers.ModelSerializer):
