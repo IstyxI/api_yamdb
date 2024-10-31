@@ -11,8 +11,6 @@ class GenreSerializer(serializers.ModelSerializer):
     """Сериализатор жанра."""
 
     class Meta:
-        """Мета."""
-
         model = Genre
         fields = ('name', 'slug')
 
@@ -21,8 +19,6 @@ class CategorySerializer(serializers.ModelSerializer):
     """Сериализатор категории."""
 
     class Meta:
-        """Мета."""
-
         fields = ('name', 'slug')
         model = Category
 
@@ -40,8 +36,6 @@ class CommentSerializer(serializers.ModelSerializer):
     )
 
     class Meta:
-        """Мета."""
-
         model = Comment
         fields = ('text', 'author', 'review', 'pub_date', 'id')
         read_only_fields = ('author', 'post', 'review')
@@ -58,8 +52,6 @@ class TitleReadSerializer(serializers.ModelSerializer):
     rating = serializers.IntegerField(read_only=True)
 
     class Meta:
-        """Мета."""
-
         fields = (
             'name', 'year', 'description', 'genre', 'category', 'id', 'rating'
         )
@@ -80,8 +72,6 @@ class TitleWriteSerializer(serializers.ModelSerializer):
     )
 
     class Meta:
-        """Мета."""
-
         fields = ('name', 'year', 'description', 'genre', 'category', 'id')
         model = Title
 
@@ -118,8 +108,6 @@ class ReviewSerializer(serializers.ModelSerializer):
         return data
 
     class Meta:
-        """Мета."""
-
         fields = ('title', 'text', 'author', 'score', 'pub_date', 'id')
         model = Review
 
@@ -128,8 +116,6 @@ class UserCreateSerializer(serializers.ModelSerializer):
     """Создание объекта класса User."""
 
     class Meta:
-        """Мета."""
-
         model = User
         fields = ('username', 'email')
 
@@ -160,8 +146,6 @@ class UserSerializer(serializers.ModelSerializer):
     """Сериализатор для модели User."""
 
     class Meta:
-        """Мета."""
-
         model = User
         fields = (
             'username',
